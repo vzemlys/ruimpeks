@@ -36,6 +36,7 @@ repos:
           \.github/workflows/.*|
           data/.*|
           docs/.*|
+          xlsx/.*|
           )$
     -   id: lintr
     -   id: readme-rmd-rendered
