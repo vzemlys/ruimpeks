@@ -1,14 +1,83 @@
 ---
 title: "Beer export to Russia from EU"
+execute:
+  echo: false
+format: 
+    html:
+        embed-resources: true
+        code-fold: true
+        df-print: paged
+knitr: 
+  opts_chunk: 
+    echo: false
+    message: false
+    warning: false
 ---
 
-## Quarto
+## Getting the data
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+Go to the [Eurostat](https://ec.europa.eu/eurostat/web/international-trade-in-goods/data/database). Select EU trade 1988-2022 by CPA 2008, pick partner Russia, flow Export, product Beer and indicator Quantity_in_100kg. 
 
 ```{r}
 library(readxl)
 library(dplyr)
 library(tidyr)
-bvol <- rtead_xlsx("xlsx/beer_volume.xlsx", sheet = 3, skip = 8)
+library(lubridate)
+library(ggplot2)
+bvol <- read_xlsx("xlsx/beer_volume.xlsx", sheet = 3, skip = 8)
+bvol1 <- bvol %>%
+  filter(!(TIME %in% c("FREQ (Labels)", "REPORTER (Labels)", "Special value", ":"))) %>%
+  filter(!is.na(TIME)) %>%
+  pivot_longer(cols = -TIME, names_to = "month", values_to = "quantity") %>%
+  filter(grepl("-", month)) %>%
+  mutate(month = ymd(paste(month, "01", sep = "-")), quantity = as.numeric(quantity)) %>%
+  rename(country = TIME) %>%
+  arrange(country, month) %>%
+  group_by(country) %>%
+  mutate(yoy = round(100 * (quantity / lag(quantity, 12) - 1), 2)) %>%
+  ungroup()
+```
+
+## Beer export to Russia from Lithuania 
+
+
+### Comparing 2022 month to 2021 month
+
+```{r}
+ggplot(aes(x = month, y = yoy), data = bvol1 %>% filter(country == "Lithuania", month >= "2022-01-01")) +
+  theme_bw() +
+  geom_col() +
+  labs(x = "Month", y = "Quantity, Growth, %", title = "Beer export from Lithuania to Russia in 2022 compared to 2021")
+```
+### Absolute values
+
+```{r}
+ggplot(aes(x = month, y = quantity), data = bvol1 %>% filter(country == "Lithuania")) +
+  theme_bw() +
+  geom_col() +
+  labs(x = "Month", y = "Quantity", title = "Beer export from Lithuania to Russia in 2021-2022")
+```
+
+
+## EU beer export to Russia
+
+### Comparing 2022 month to 2021 month
+
+```{r}
+eu <- "European Union - 27 countries (AT, BE, BG, CY, CZ, DE, DK, EE, ES, FI, FR, GR, HR, HU, IE, IT, LT, LU, LV, MT, NL, PL, PT, RO, SE, SI, SK)"
+
+ggplot(aes(x = month, y = yoy), data = bvol1 %>% filter(country == eu, month >= "2022-01-01")) +
+  theme_bw() +
+  geom_col() +
+  labs(x = "Month", y = "Quantity, Growth, %", title = "Beer export from EU to Russia in 2022 compared to 2021")
+```
+
+### Absolute values
+
+```{r}
+
+ggplot(aes(x = month, y = quantity), data = bvol1 %>% filter(country == eu)) +
+  theme_bw() +
+  geom_col() +
+  labs(x = "Month", y = "Quantity, Growth, %", title = "Beer export from EU to Russia in 2021-2022")
 ```
