@@ -1,0 +1,14 @@
+---
+title: "Beer export to Russia from EU"
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+bvol <- rtead_xlsx("xlsx/beer_volume.xlsx", sheet = 3, skip = 8)
+```
