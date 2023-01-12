@@ -1,0 +1,95 @@
+---
+title: "Lietuvos eksportas į Rusiją ir jos kaimynes"
+execute:
+  echo: false
+format: 
+    html:
+        embed-resources: true
+        code-fold: true
+        df-print: paged
+knitr: 
+  opts_chunk: 
+    echo: false
+    message: false
+    warning: false
+---
+
+## Duomenų šaltinis
+
+Duomenys paimti iš [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/DS-045409/legacyMultiFreq/table?lang=en).  
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+texp <- read_xlsx("xlsx/lt_total_exports.xlsx", sheet = 3, skip = 8)
+texp1 <- texp %>%
+  filter(!(TIME %in% c("FREQ (Labels)", "PARTNER (Labels)", "Special value", ":"))) %>%
+  filter(!is.na(TIME)) %>%
+  pivot_longer(cols = -TIME, names_to = "month", values_to = "export") %>%
+  filter(grepl("-", month)) %>%
+  mutate(month = ymd(paste(month, "01", sep = "-")), export = as.numeric(export)) %>%
+  rename(country = TIME) %>%
+  arrange(country, month)
+
+eexp <- read_xlsx("xlsx/lt_energy_exports.xlsx", sheet = 3, skip = 8)
+eexp1 <- eexp %>%
+  filter(!(TIME %in% c("FREQ (Labels)", "PARTNER (Labels)", "Special value", ":"))) %>%
+  filter(!is.na(TIME)) %>%
+  pivot_longer(cols = -TIME, names_to = "month", values_to = "energy") %>%
+  filter(grepl("-", month)) %>%
+  mutate(month = ymd(paste(month, "01", sep = "-")), energy = as.numeric(energy)) %>%
+  rename(country = TIME) %>%
+  arrange(country, month)
+
+cn <- read.csv("meta/salys.csv")
+
+fixNA <- function(x) {
+  x[is.na(x)] <- 0
+  x
+}
+
+dt <- texp1 %>%
+  left_join(eexp1) %>%
+  filter(month <= "2022-10-01") %>%
+  mutate(energy = fixNA(energy)) %>%
+  mutate(value = export - energy) %>%
+  left_join(cn)
+```
+## Lietuvos eksportas (be energijos) į Rusiją ir jos kaimynes
+
+Eksportas į Rusiją nukrito po karo, bet pradėjo atsigauti ir paskutiniais turimais duomenimis pasiekė 2021 metų lygį. 
+
+```{r}
+cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 2, 4, 1, 6, 7)]
+ggplot(aes(x = month, y = value, fill = salis), data = dt) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Šalis", values = cols) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Mėnuo", y = "", title = "Lietuvos eksportas į Rusiją ir jos kaimynes")
+```
+
+## Lietuvos eksportas į Rusiją
+
+```{r}
+ggplot(aes(x = month, y = value, fill = salis), data = dt %>% filter(salis == "Rusija")) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Šalis", values = cols[5]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Mėnuo", y = "", title = "Lietuvos eksportas į Rusiją")
+```
+
+## Lietuvos eksportas į Rusijos kaimynes
+
+```{r}
+ggplot(aes(x = month, y = value, fill = salis), data = dt %>% filter(salis != "Rusija")) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Šalis", values = cols[-5]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Mėnuo", y = "", title = "Lietuvos eksportas į Rusiją")
+```
