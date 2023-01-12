@@ -91,5 +91,5 @@ ggplot(aes(x = month, y = value, fill = salis), data = dt %>% filter(salis != "R
   theme_bw() +
   scale_fill_manual(name = "Šalis", values = cols[-5]) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Mėnuo", y = "", title = "Lietuvos eksportas į Rusiją")
+  labs(x = "Mėnuo", y = "", title = "Lietuvos eksportas į kaimynines Rusijos šalis")
 ```
