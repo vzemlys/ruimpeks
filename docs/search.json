@@ -47,5 +47,40 @@
     "title": "Lietuvos eksportas į Rusiją ir jos kaimynes",
     "section": "Lietuvos eksportas į Rusijos kaimynes",
     "text": "Lietuvos eksportas į Rusijos kaimynes"
+  },
+  {
+    "objectID": "eu_ru_export.html",
+    "href": "eu_ru_export.html",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "",
+    "text": "Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.\nThe data was taken from Eurostat. The code and data can be found in the Github repository."
+  },
+  {
+    "objectID": "eu_ru_export.html#eu-export-to-russia-and-neighbouring-countries",
+    "href": "eu_ru_export.html#eu-export-to-russia-and-neighbouring-countries",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "EU export to Russia and neighbouring countries",
+    "text": "EU export to Russia and neighbouring countries"
+  },
+  {
+    "objectID": "eu_ru_export.html#eu-export-to-russia-neighbours",
+    "href": "eu_ru_export.html#eu-export-to-russia-neighbours",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "EU export to Russia neighbours",
+    "text": "EU export to Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_export.html#eu-import-from-russia-and-neighbouring-countries",
+    "href": "eu_ru_export.html#eu-import-from-russia-and-neighbouring-countries",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "EU import from Russia and neighbouring countries",
+    "text": "EU import from Russia and neighbouring countries"
+  },
+  {
+    "objectID": "eu_ru_export.html#eu-import-from-russia-neighbours",
+    "href": "eu_ru_export.html#eu-import-from-russia-neighbours",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "EU import from Russia neighbours",
+    "text": "EU import from Russia neighbours"
   }
 ]
