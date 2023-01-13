@@ -1,0 +1,121 @@
+---
+title: "EU export and import to Russia and its neighbours"
+execute:
+  echo: false
+format: 
+    html:
+        embed-resources: true
+        code-fold: true
+        df-print: paged
+knitr: 
+  opts_chunk: 
+    echo: false
+    message: false
+    warning: false
+---
+
+## Introduction
+
+Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.
+
+The data was taken from [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/DS-045409/legacyMultiFreq/table?lang=en). The [code](https://github.com/vzemlys/ruimpeks/eu_ru_export.qmd) and [data](https://github.com/vzemlys/ruimpeks/xlsx) can be found in the [Github repository](https://github.com/vzemlys/ruimpeks/). 
+
+```{r}
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+
+
+read_eurostat <- function(xlsx_name, value_name) {
+  texp <- read_xlsx(xlsx_name, sheet = 3, skip = 8)
+  texp1 <- texp %>%
+    filter(!(TIME...1 %in% c("FREQ (Labels)", "PARTNER (Labels)", "Special value", ":"))) %>%
+    filter(!is.na(TIME...1)) %>%
+    rename(partner = TIME...1, reporter = TIME...2) %>%
+    pivot_longer(cols = -(partner:reporter), names_to = "month", values_to = value_name) %>%
+    filter(grepl("-", month)) %>%
+    mutate(month = ymd(paste(month, "01", sep = "-"))) %>%
+    arrange(partner, reporter, month) %>%
+    mutate(across(.cols = all_of(value_name), .fns = as.numeric))
+  texp1
+}
+fixNA <- function(x) {
+  x[is.na(x)] <- 0
+  x
+}
+
+cn <- read.csv("meta/salys.csv") %>% select(partner = country, country = name)
+eu_texp <- read_eurostat("xlsx/eu_total_export.xlsx", value_name = "total_export")
+eu_timp <- read_eurostat("xlsx/eu_total_import.xlsx", value_name = "total_import")
+eu_eexp <- read_eurostat("xlsx/eu_energy_export.xlsx", value_name = "energy_export")
+eu_eimp <- read_eurostat("xlsx/eu_energy_import.xlsx", value_name = "energy_import")
+
+eu_tr <- eu_texp %>%
+  left_join(eu_timp) %>%
+  left_join(eu_eexp) %>%
+  left_join(eu_eimp) %>%
+  mutate(across(.cols = c("total_export", "total_import", "energy_export", "energy_import"), .fns = fixNA)) %>%
+  mutate(
+    export = total_export - energy_export,
+    import = total_import - energy_import
+  ) %>%
+  left_join(cn)
+```
+## EU export to Russia and neighbouring countries
+
+
+```{r}
+cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
+eu_tr1 <- eu_tr %>%
+  group_by(country, month) %>%
+  summarise(export = sum(export), import = sum(import)) %>%
+  ungroup()
+
+ggplot(aes(x = month, y = export, fill = country), data = eu_tr1) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "EU export to Russia and neighbouring countries")
+```
+
+## EU export to Russia neighbours
+
+```{r}
+ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(country != "Russia")) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols[-6]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "EU export to Russia neighbours")
+```
+
+## EU import from Russia and neighbouring countries
+
+```{r}
+cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
+eu_tr1 <- eu_tr %>%
+  group_by(country, month) %>%
+  summarise(export = sum(export), import = sum(import)) %>%
+  ungroup()
+
+ggplot(aes(x = month, y = import, fill = country), data = eu_tr1) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "EU import from Russia and neighbouring countries")
+```
+
+## EU import from Russia neighbours
+
+```{r}
+ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(country != "Russia")) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols[-6]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "EU import from Russia neighbours")
+```
