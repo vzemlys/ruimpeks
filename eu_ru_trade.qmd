@@ -14,7 +14,7 @@ knitr:
     warning: false
 ---
 
-## Introduction
+# Introduction
 
 Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.
 
@@ -67,8 +67,9 @@ eu_tr0 <- eu_texp %>%
 
 eu_tr <- filter(eu_tr0) %>% filter(month <= "2022-10-01")
 ```
-## EU export to Russia and neighbouring countries
+# EU trade  with Russia and neighbouring countries 
 
+## EU export to Russia and eighbouring countries
 
 ```{r}
 cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
@@ -96,20 +97,7 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(coun
   labs(x = "Month", y = "", title = "EU export to Russia neighbours")
 ```
 
-## EU export growth after war compared to previous year
 
-```{r}
-eu_trf <- eu_tr %>%
-  mutate(
-    period =
-      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
-        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
-      )
-  ) %>%
-  filter(!is.na(period)) %>%
-  group_by(partner, reporter, period) %>%
-  summarise(export = sum(export), import = sum(import))
-```
 
 ## EU import from Russia and neighbouring countries
 
@@ -137,4 +125,88 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(coun
   scale_fill_manual(name = "Country", values = cols[-6]) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
   labs(x = "Month", y = "", title = "EU import from Russia neighbours")
+```
+
+
+# EU trade after war growth compared to previous year
+
+```{r}
+eu_trf <- eu_tr %>%
+  mutate(
+    period =
+      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
+        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      )
+  ) %>%
+  filter(!is.na(period)) %>%
+  group_by(partner = country, reporter = eu_country, period) %>%
+  summarise(export = sum(export), import = sum(import))
+
+eu_erf <- eu_trf %>%
+  filter(partner == "Russia") %>%
+  arrange(reporter, period) %>%
+  mutate(egrowth = round(100 * (export / lag(export) - 1), 2), igrowth = round(100 * (import / lag(import) - 1), 2))
+
+eu_erf1 <- eu_erf %>%
+  filter(period == 2022) %>%
+  arrange(reporter) %>%
+  mutate(epos = egrowth >= 0, ipos = igrowth >= 0) %>%
+  mutate(reporter = factor(reporter, levels = sort(eu_cn$eu_country, decreasing = TRUE)))
+
+eu_enb <- eu_trf %>%
+  filter(partner != "Russia") %>%
+  group_by(reporter, period) %>%
+  summarise(export = sum(export), import = sum(import)) %>%
+  mutate(egrowth = round(100 * (export / lag(export) - 1), 2), igrowth = round(100 * (import / lag(import) - 1), 2))
+
+eu_enb1 <- eu_enb %>%
+  filter(period == 2022) %>%
+  arrange(reporter) %>%
+  mutate(reporter = factor(reporter, levels = sort(eu_cn$eu_country, decreasing = TRUE))) %>%
+  mutate(epos = egrowth >= 0, ipos = igrowth >= 0)
+```
+
+## EU export growth to Russia
+
+```{r}
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_erf1) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia, 2022 after war period growth compared to 2021")
+```
+
+## EU export growth to Russia neighbours
+
+```{r}
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_enb1) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia neighbours, 2022 after war period growth compared to 2021")
+```
+
+
+## EU import growth from Russia
+
+```{r}
+ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_erf1) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU import from Russia, 2022 after war period growth compared to 2021")
+```
+
+## EU import growth from Russia neighbours
+
+```{r}
+ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb1) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU import from Russia neighbours, 2022 after war period growth compared to 2021")
 ```
