@@ -174,7 +174,7 @@ ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_erf1) +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU export to Russia, 2022 after war period growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia, 2022 after war growth compared to 2021")
 ```
 
 ## EU export growth to Russia neighbours
@@ -185,7 +185,7 @@ ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_enb1) +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU export to Russia neighbours, 2022 after war period growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia neighbours, 2022 after war growth compared to 2021")
 ```
 
 
@@ -197,7 +197,7 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_erf1) +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU import from Russia, 2022 after war period growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU import from Russia, 2022 after war growth compared to 2021")
 ```
 
 ## EU import growth from Russia neighbours
@@ -208,5 +208,5 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb1) +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU import from Russia neighbours, 2022 after war period growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU import from Russia neighbours, 2022 after war growth compared to 2021")
 ```
