@@ -47,12 +47,13 @@ fixNA <- function(x) {
 }
 
 cn <- read.csv("meta/salys.csv") %>% select(partner = country, country = name)
+eu_cn <- read.csv("meta/eu_countries.csv")
 eu_texp <- read_eurostat("xlsx/eu_total_export.xlsx", value_name = "total_export")
 eu_timp <- read_eurostat("xlsx/eu_total_import.xlsx", value_name = "total_import")
 eu_eexp <- read_eurostat("xlsx/eu_energy_export.xlsx", value_name = "energy_export")
 eu_eimp <- read_eurostat("xlsx/eu_energy_import.xlsx", value_name = "energy_import")
 
-eu_tr <- eu_texp %>%
+eu_tr0 <- eu_texp %>%
   left_join(eu_timp) %>%
   left_join(eu_eexp) %>%
   left_join(eu_eimp) %>%
@@ -61,7 +62,10 @@ eu_tr <- eu_texp %>%
     export = total_export - energy_export,
     import = total_import - energy_import
   ) %>%
-  left_join(cn)
+  left_join(cn) %>%
+  inner_join(eu_cn)
+
+eu_tr <- filter(eu_tr0) %>% filter(month <= "2022-10-01")
 ```
 ## EU export to Russia and neighbouring countries
 
@@ -90,6 +94,21 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(coun
   scale_fill_manual(name = "Country", values = cols[-6]) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
   labs(x = "Month", y = "", title = "EU export to Russia neighbours")
+```
+
+## EU export growth after war compared to previous year
+
+```{r}
+eu_trf <- eu_tr %>%
+  mutate(
+    period =
+      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
+        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      )
+  ) %>%
+  filter(!is.na(period)) %>%
+  group_by(partner, reporter, period) %>%
+  summarise(export = sum(export), import = sum(import))
 ```
 
 ## EU import from Russia and neighbouring countries
