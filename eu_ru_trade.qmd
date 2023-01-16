@@ -210,3 +210,38 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb1) +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
   labs(y = "Export growth, %", x = "", title = "EU import from Russia neighbours, 2022 after war growth compared to 2021")
 ```
+
+# Sanctions
+
+```{r}
+eu_es <- readxl::read_xlsx("xlsx/eu_export_sanctioned.xlsx") %>%
+  mutate(month = ymd(month)) %>%
+  select(reporter = partner, partner = reporter, month, sanctioned_export)
+
+es1 <- eu_es %>%
+  inner_join(cn) %>%
+  inner_join(eu_cn)
+
+es2 <- es1 %>%
+  group_by(country, month) %>%
+  summarise(sanctioned_export = sum(sanctioned_export)) %>%
+  ungroup()
+```
+
+```{r}
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries")
+```
+
+```{r}
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia")) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols[-6]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours")
+```
