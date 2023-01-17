@@ -215,33 +215,50 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb1) +
 
 ```{r}
 eu_es <- readxl::read_xlsx("xlsx/eu_export_sanctioned.xlsx") %>%
-  mutate(month = ymd(month)) %>%
-  select(reporter = partner, partner = reporter, month, sanctioned_export)
+  mutate(month = ymd(month))
 
 es1 <- eu_es %>%
   inner_join(cn) %>%
   inner_join(eu_cn)
 
 es2 <- es1 %>%
-  group_by(country, month) %>%
+  group_by(country, month, code_length) %>%
   summarise(sanctioned_export = sum(sanctioned_export)) %>%
   ungroup()
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(code_length == 4)) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries")
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries, 4 digits code")
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia")) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia"), code_length == 4) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols[-6]) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours")
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours, 4 digits code")
+```
+
+```{r}
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(code_length == 8)) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries, 8 digits code")
+```
+
+```{r}
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia"), code_length == 8) +
+  geom_col() +
+  theme_bw() +
+  scale_fill_manual(name = "Country", values = cols[-6]) +
+  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours, 8 digits code")
 ```

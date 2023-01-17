@@ -11,9 +11,9 @@ read_eurostat1 <- function(xlsx_name, sheet) {
   meta <- read_xlsx(xlsx_name, sheet = sheet, n_max = 8)
   product_name <- pull(meta[which(pull(meta, 1) == "PRODUCT [PRODUCT]"), 3], 1)
   value_name <- "value"
-  texp <- read_xlsx(xlsx_name, sheet = 3, skip = 8)
+  texp <- read_xlsx(xlsx_name, sheet = sheet, skip = 8)
   texp1 <- texp %>%
-    filter(!(TIME...1 %in% c("FREQ (Labels)", "PARTNER (Labels)", "Special value", ":"))) %>%
+    filter(!(TIME...1 %in% c("FREQ (Labels)", "REPORTER (Labels)", "Special value", ":"))) %>%
     filter(!is.na(TIME...1)) %>%
     rename(reporter = TIME...1, partner = TIME...2) %>%
     pivot_longer(cols = -(partner:reporter), names_to = "month", values_to = value_name) %>%
