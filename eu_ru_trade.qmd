@@ -237,7 +237,7 @@ ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% fil
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia"), code_length == 4) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia", code_length == 4)) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols[-6]) +
@@ -255,7 +255,7 @@ ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% fil
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia"), code_length == 8) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia", code_length == 8)) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols[-6]) +

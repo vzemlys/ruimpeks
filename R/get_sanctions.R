@@ -31,5 +31,10 @@ read_sanctions <- function(xlsx_name) {
   contents <- read_xlsx(xlsx_name, sheet = 1)
   no_sheets <- length(grep("Sheet", unlist(contents[, 2]), value = TRUE))
   res <- lapply(2 + 1:no_sheets, function(no) try(read_eurostat1(xlsx_name, sheet = no)))
-  do.call(rbind, res)
+  pp <- do.call(rbind, res)
+  oo <- str_split_fixed(pp$product, fixed("["), 2)
+  pp1 <- pp %>%
+    select(-product) %>%
+    mutate(product = str_trim(oo[, 1]), code = gsub("]", "", oo[, 2]))
+  pp1
 }
