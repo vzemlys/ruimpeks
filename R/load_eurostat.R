@@ -7,10 +7,11 @@ fix_na <- function(x) {
   x
 }
 
-read_eurostat1 <- function(xlsx_name, sheet) {
+read_eurostat_sheet <- function(xlsx_name, sheet, flow = FALSE) {
   meta <- read_xlsx(xlsx_name, sheet = sheet, n_max = 8)
   product_name <- pull(meta[which(pull(meta, 1) == "PRODUCT [PRODUCT]"), 3], 1)
   value_name <- "value"
+
   texp <- read_xlsx(xlsx_name, sheet = sheet, skip = 8)
   texp1 <- texp %>%
     filter(!(TIME...1 %in% c("FREQ (Labels)", "REPORTER (Labels)", "Special value", ":"))) %>%
@@ -24,13 +25,17 @@ read_eurostat1 <- function(xlsx_name, sheet) {
     mutate(across(.cols = all_of(value_name), .fns = fix_na)) %>%
     mutate(product = product_name)
 
+  if (flow) {
+    flow_name <- tolower(pull(meta[which(pull(meta, 1) == "FLOW"), 3], 1))
+    texp1 <- texp1 %>% mutate(flow = flow_name)
+  }
   texp1
 }
 
-read_sanctions <- function(xlsx_name) {
+read_eurostat <- function(xlsx_name, flow = FALSE) {
   contents <- read_xlsx(xlsx_name, sheet = 1)
   no_sheets <- length(grep("Sheet", unlist(contents[, 2]), value = TRUE))
-  res <- lapply(2 + 1:no_sheets, function(no) try(read_eurostat1(xlsx_name, sheet = no)))
+  res <- lapply(2 + 1:no_sheets, function(no) try(read_eurostat_sheet(xlsx_name, sheet = no, flow = flow)))
   pp <- do.call(rbind, res)
   oo <- str_split_fixed(pp$product, fixed("["), 2)
   pp1 <- pp %>%

@@ -26,38 +26,22 @@ library(dplyr)
 library(tidyr)
 library(lubridate)
 library(ggplot2)
+library(stringr)
 
-
-read_eurostat <- function(xlsx_name, value_name) {
-  texp <- read_xlsx(xlsx_name, sheet = 3, skip = 8)
-  texp1 <- texp %>%
-    filter(!(TIME...1 %in% c("FREQ (Labels)", "PARTNER (Labels)", "Special value", ":"))) %>%
-    filter(!is.na(TIME...1)) %>%
-    rename(partner = TIME...1, reporter = TIME...2) %>%
-    pivot_longer(cols = -(partner:reporter), names_to = "month", values_to = value_name) %>%
-    filter(grepl("-", month)) %>%
-    mutate(month = ymd(paste(month, "01", sep = "-"))) %>%
-    arrange(partner, reporter, month) %>%
-    mutate(across(.cols = all_of(value_name), .fns = as.numeric))
-  texp1
-}
-fixNA <- function(x) {
-  x[is.na(x)] <- 0
-  x
-}
+source("R/load_eurostat.R")
 
 cn <- read.csv("meta/salys.csv") %>% select(partner = country, country = name)
 eu_cn <- read.csv("meta/eu_countries.csv")
-eu_texp <- read_eurostat("xlsx/eu_total_export.xlsx", value_name = "total_export")
-eu_timp <- read_eurostat("xlsx/eu_total_import.xlsx", value_name = "total_import")
-eu_eexp <- read_eurostat("xlsx/eu_energy_export.xlsx", value_name = "energy_export")
-eu_eimp <- read_eurostat("xlsx/eu_energy_import.xlsx", value_name = "energy_import")
 
-eu_tr0 <- eu_texp %>%
-  left_join(eu_timp) %>%
-  left_join(eu_eexp) %>%
-  left_join(eu_eimp) %>%
-  mutate(across(.cols = c("total_export", "total_import", "energy_export", "energy_import"), .fns = fixNA)) %>%
+eu_texp <- read_eurostat("xlsx/eu_total_trade_4630244_spreadsheet.xlsx", flow = TRUE)
+
+eu_texp1 <- eu_texp %>%
+  mutate(name = paste(flow, code, sep = "_")) %>%
+  pivot_wider(id_cols = c("reporter", "partner", "month"), values_from = value, names_from = "name", values_fill = 0) %>%
+  rename(
+    total_export = export_TOTAL, total_import = import_TOTAL,
+    energy_import = import_27, energy_export = export_27
+  ) %>%
   mutate(
     export = total_export - energy_export,
     import = total_import - energy_import
@@ -65,11 +49,11 @@ eu_tr0 <- eu_texp %>%
   left_join(cn) %>%
   inner_join(eu_cn)
 
-eu_tr <- filter(eu_tr0) %>% filter(month <= "2022-10-01")
+eu_tr <- eu_texp1 %>% filter(month <= "2022-10-01")
 ```
 # EU trade  with Russia and neighbouring countries 
 
-## EU export to Russia and eighbouring countries
+## EU export to Russia and neighbouring countries
 
 ```{r}
 cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
@@ -222,43 +206,25 @@ es1 <- eu_es %>%
   inner_join(eu_cn)
 
 es2 <- es1 %>%
-  group_by(country, month, code_length) %>%
+  group_by(country, month) %>%
   summarise(sanctioned_export = sum(sanctioned_export)) %>%
   ungroup()
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(code_length == 4)) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries, 4 digits code")
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries")
 ```
 
 ```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia", code_length == 4)) +
+ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia")) +
   geom_col() +
   theme_bw() +
   scale_fill_manual(name = "Country", values = cols[-6]) +
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours, 4 digits code")
-```
-
-```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(code_length == 8)) +
-  geom_col() +
-  theme_bw() +
-  scale_fill_manual(name = "Country", values = cols) +
-  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries, 8 digits code")
-```
-
-```{r}
-ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia", code_length == 8)) +
-  geom_col() +
-  theme_bw() +
-  scale_fill_manual(name = "Country", values = cols[-6]) +
-  scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
-  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours, 8 digits code")
+  labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours")
 ```
