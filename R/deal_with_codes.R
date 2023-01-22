@@ -11,3 +11,5 @@ hd4 <- cds1$header %>% unique()
 ints <- intersect(cd4, hd4)
 setdiff(ints, cd4)
 setdiff(cd4, ints)
+
+hd4 %>% setdiff(cd4)
