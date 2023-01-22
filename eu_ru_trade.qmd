@@ -28,7 +28,7 @@ library(lubridate)
 library(ggplot2)
 library(stringr)
 
-source("R/load_eurostat.R")
+source("R/read_eurostat.R")
 
 cn <- read.csv("meta/salys.csv") %>% select(partner = country, country = name)
 eu_cn <- read.csv("meta/eu_countries.csv")
