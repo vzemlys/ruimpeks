@@ -88,7 +88,7 @@
     "href": "eu_ru_trade.html",
     "title": "EU export and import to Russia and its neighbours",
     "section": "",
-    "text": "Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.\nThe data was taken from Eurostat. The code and data can be found in the Github repository."
+    "text": "Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.\nThe analysis of overall trade impact is presented followed by the analysis of sanctioned export. The data used comes from Eurostat. See the @appendix for technical details.\n\n\nTrade with Russia dropped significantly after Russia invasion on February 24th. However the export to Russia neighbours has increased meaning that companies are evading sanctions on exports to Russia by exporting to its neighbours instead."
   },
   {
     "objectID": "eu_ru_trade.html#eu-export-to-russia-and-neighbouring-countries",
@@ -159,5 +159,40 @@
     "title": "EU export and import to Russia and its neighbours",
     "section": "EU import growth from Russia neighbours",
     "text": "EU import growth from Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#data",
+    "href": "eu_ru_trade.html#data",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Data",
+    "text": "Data\nThe data used comes from Eurostat dataset on internation trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document\n\nTotal trade data\nCN codes for export sanctions\nSanctioned export data and the code to prepare it."
+  },
+  {
+    "objectID": "eu_ru_trade.html#trade-in-absolute-values",
+    "href": "eu_ru_trade.html#trade-in-absolute-values",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Trade in absolute values",
+    "text": "Trade in absolute values\n\nEU exports to Russia and neighbouring countries\n\n\n\n\n\n\n\nEU export to Russia neighbours\n\n\n\n\n\n\n\nEU import from Russia and neighbouring countries\n\n\n\n\n\n\n\nEU import from Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#trade-growth",
+    "href": "eu_ru_trade.html#trade-growth",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Trade growth",
+    "text": "Trade growth\nComparison is made between the months following the Russian invasion and corresponding months in 2021.\n\n\n\n\nEU export growth to Russia\n\n\n\n\n\n\n\nEU export growth to Russia neighbours\n\n\n\n\n\n\n\nEU import growth from Russia\n\n\n\n\n\n\n\nEU import growth from Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#export-of-sanctioned-goods",
+    "href": "eu_ru_trade.html#export-of-sanctioned-goods",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Export of sanctioned goods",
+    "text": "Export of sanctioned goods\n\nTo Russia with its neighbours\n\n\n\n\n\n\n\n\n\n\nTo Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#sanctioned-export-growth",
+    "href": "eu_ru_trade.html#sanctioned-export-growth",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Sanctioned export growth",
+    "text": "Sanctioned export growth\n\n\n\n\nEU sanctioned export growth to Russia\n\n\n\n\n\n\n\nEU sanctioned export growth to Russia neighbours"
   }
 ]

@@ -32,13 +32,11 @@ test_that("No duplication", {
 
 # Test that 4 digit codes are not really necessary ---
 
-pp1 %>%
+cds <- pp1 %>%
   count(code, product) %>%
   select(-n) %>%
-  arrange(code) %>%
-  write.csv("meta/export_sanctions_codes.csv", row.names = FALSE)
+  arrange(code)
 
-cds <- read.csv("meta/export_sanctions_codes.csv", colClasses = c("character", "character"))
 
 cds1 <- cds %>% mutate(header = substr(code, 1, 4))
 cds1 %>% filter(code == header)
@@ -63,6 +61,12 @@ test_that("8 digit codes cover more industries than 4 digit code present", {
   expect_true(length(a) > 0)
 })
 
-## Write out the data
+## Write out the data --------
+
+pp2 %>%
+  count(code, product) %>%
+  select(-n) %>%
+  arrange(code) %>%
+  write.csv("meta/export_sanctions_codes.csv", row.names = FALSE, quote = TRUE)
 
 pp2 %>% arrow::write_parquet("raw/eu_export_sanctions_data.parquet")

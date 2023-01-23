@@ -7,6 +7,8 @@ format:
         embed-resources: true
         code-fold: true
         df-print: paged
+        toc: true
+        toc-location: left
 knitr: 
   opts_chunk: 
     echo: false
@@ -18,7 +20,13 @@ knitr:
 
 Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.
 
-The data was taken from [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/DS-045409/legacyMultiFreq/table?lang=en). The [code](https://github.com/vzemlys/ruimpeks/eu_ru_export.qmd) and [data](https://github.com/vzemlys/ruimpeks/xlsx) can be found in the [Github repository](https://github.com/vzemlys/ruimpeks/). 
+The analysis of overall trade impact is presented followed by the analysis of sanctioned export. The data used comes from Eurostat. See the @appendix for technical details.
+
+## Main findings
+
+Trade with Russia dropped significantly after Russia invasion on February 24th. However the export to Russia neighbours has increased meaning that companies are evading sanctions on exports to Russia by exporting to its neighbours instead.
+
+
 
 ```{r}
 library(readxl)
@@ -27,6 +35,7 @@ library(tidyr)
 library(lubridate)
 library(ggplot2)
 library(stringr)
+library(arrow)
 
 source("R/read_eurostat.R")
 
@@ -51,9 +60,13 @@ eu_texp1 <- eu_texp %>%
 
 eu_tr <- eu_texp1 %>% filter(month <= "2022-10-01")
 ```
-# EU trade  with Russia and neighbouring countries 
+# EU total trade with Russia and neighbouring countries 
 
-## EU export to Russia and neighbouring countries
+Energy trade is a big part of overall EU trade. It distorts overall picture so it was excluded from the analysis. The period taken is from January 2020 so that dynamics of two years before the war can be seen. The data is available up to October 2022.
+
+## Trade in absolute values
+
+### EU exports to Russia and neighbouring countries
 
 ```{r}
 cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
@@ -70,7 +83,7 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1) +
   labs(x = "Month", y = "", title = "EU export to Russia and neighbouring countries")
 ```
 
-## EU export to Russia neighbours
+### EU export to Russia neighbours
 
 ```{r}
 ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(country != "Russia")) +
@@ -81,9 +94,7 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(coun
   labs(x = "Month", y = "", title = "EU export to Russia neighbours")
 ```
 
-
-
-## EU import from Russia and neighbouring countries
+### EU import from Russia and neighbouring countries
 
 ```{r}
 cols <- RColorBrewer::brewer.pal(7, "Set1")[c(5, 3, 6, 2, 4, 1, 7)]
@@ -100,7 +111,7 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1) +
   labs(x = "Month", y = "", title = "EU import from Russia and neighbouring countries")
 ```
 
-## EU import from Russia neighbours
+### EU import from Russia neighbours
 
 ```{r}
 ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(country != "Russia")) +
@@ -112,8 +123,9 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(coun
 ```
 
 
-# EU trade after war growth compared to previous year
+## Trade growth
 
+Comparison is made between the months following the Russian invasion and corresponding months in 2021. 
 ```{r}
 eu_trf <- eu_tr %>%
   mutate(
@@ -150,56 +162,78 @@ eu_enb1 <- eu_enb %>%
   mutate(epos = egrowth >= 0, ipos = igrowth >= 0)
 ```
 
-## EU export growth to Russia
+### EU export growth to Russia
 
 ```{r}
-ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_erf1) +
+eu_erf2 <- eu_erf1 %>% arrange(egrowth)
+eu_erf3 <- eu_erf2 %>% mutate(reporter = factor(as.character(reporter), levels = eu_erf2$reporter))
+
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_erf3) +
   geom_col() +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU export to Russia, 2022 after war growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia in 2022 after war,  growth compared to 2021")
 ```
 
-## EU export growth to Russia neighbours
+### EU export growth to Russia neighbours
 
 ```{r}
-ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_enb1) +
+eu_enb2 <- eu_enb1 %>% arrange(egrowth)
+eu_enb3 <- eu_enb2 %>% mutate(reporter = factor(as.character(reporter), levels = eu_enb2$reporter))
+
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_enb3) +
   geom_col() +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU export to Russia neighbours, 2022 after war growth compared to 2021")
+  labs(y = "Export growth, %", x = "", title = "EU export to Russia neighbours in 2022 after war,  growth compared to 2021")
 ```
 
-
-## EU import growth from Russia
+### EU import growth from Russia
 
 ```{r}
-ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_erf1) +
+eu_erf4 <- eu_erf1 %>% arrange(igrowth)
+eu_erf5 <- eu_erf4 %>% mutate(reporter = factor(as.character(reporter), levels = eu_erf4$reporter))
+
+
+ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_erf5) +
   geom_col() +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU import from Russia, 2022 after war growth compared to 2021")
+  labs(y = "Import growth, %", x = "", title = "EU import from Russia in 2022 after war, growth compared to 2021")
 ```
 
-## EU import growth from Russia neighbours
+### EU import growth from Russia neighbours
 
 ```{r}
-ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb1) +
+eu_enb4 <- eu_enb1 %>% arrange(igrowth)
+eu_enb5 <- eu_enb4 %>% mutate(reporter = factor(as.character(reporter), levels = eu_enb4$reporter))
+
+ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb5) +
   geom_col() +
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
-  labs(y = "Export growth, %", x = "", title = "EU import from Russia neighbours, 2022 after war growth compared to 2021")
+  labs(y = "Import growth, %", x = "", title = "EU import from Russia neighbours 2022 after war,  growth compared to 2021")
 ```
 
-# Sanctions
+# Effect of sanctions on export
+
+Sanctions put on exports are listed by their CN code in the following [document](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02014R0833-20221007). See @sec-appendix for technical details how the data was collected.
+
+There are quotas for certain sanctioned goods, which allow export, so it is expected that sanctioned export is non zero until the quotas run out. The effect of quotas is not analyzed.
+
+## Export of sanctioned goods 
+
+### To Russia with its neighbours
 
 ```{r}
-eu_es <- readxl::read_xlsx("xlsx/eu_export_sanctioned.xlsx") %>%
-  mutate(month = ymd(month))
+espq <- read_parquet("raw/eu_export_sanctions_data.parquet")
+eu_es <- espq %>%
+  group_by(partner, reporter, month) %>%
+  summarise(sanctioned_export = sum(value))
 
 es1 <- eu_es %>%
   inner_join(cn) %>%
@@ -211,6 +245,8 @@ es2 <- es1 %>%
   ungroup()
 ```
 
+
+
 ```{r}
 ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
   geom_col() +
@@ -220,6 +256,7 @@ ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
   labs(x = "Month", y = "", title = "Sanctioned EU export to Russia and neighbouring countries")
 ```
 
+### To Russia neighbours
 ```{r}
 ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% filter(country != "Russia")) +
   geom_col() +
@@ -228,3 +265,84 @@ ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% fil
   scale_y_continuous(labels = scales::dollar_format(prefix = "€")) +
   labs(x = "Month", y = "", title = "Sanctioned EU export to Russia neighbours")
 ```
+## Sanctioned export growth
+
+
+```{r}
+eu_strf <- es1 %>%
+  mutate(
+    period =
+      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
+        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      )
+  ) %>%
+  filter(!is.na(period)) %>%
+  group_by(partner = country, reporter = eu_country, period) %>%
+  summarise(sanctioned_export = sum(sanctioned_export))
+
+eu_serf <- eu_strf %>%
+  filter(partner == "Russia") %>%
+  arrange(reporter, period) %>%
+  mutate(egrowth = round(100 * (sanctioned_export / lag(sanctioned_export) - 1), 2))
+
+eu_serf1 <- eu_serf %>%
+  filter(period == 2022) %>%
+  arrange(reporter) %>%
+  mutate(epos = egrowth >= 0) %>%
+  mutate(reporter = factor(reporter, levels = sort(eu_cn$eu_country, decreasing = TRUE)))
+
+eu_senb <- eu_strf %>%
+  filter(partner != "Russia") %>%
+  group_by(reporter, period) %>%
+  summarise(sanctioned_export = sum(sanctioned_export)) %>%
+  mutate(egrowth = round(100 * (sanctioned_export / lag(sanctioned_export) - 1), 2))
+
+eu_senb1 <- eu_senb %>%
+  filter(period == 2022) %>%
+  arrange(reporter) %>%
+  mutate(reporter = factor(reporter, levels = sort(eu_cn$eu_country, decreasing = TRUE))) %>%
+  mutate(epos = egrowth >= 0)
+```
+
+### EU sanctioned export growth to Russia
+
+```{r}
+eu_serf2 <- eu_serf1 %>% arrange(egrowth)
+eu_serf3 <- eu_serf2 %>% mutate(reporter = factor(as.character(reporter), levels = eu_serf2$reporter))
+
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_serf3) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU sanctioned export growth to Russia in 2022 after war")
+```
+
+### EU sanctioned export growth to Russia neighbours
+
+```{r}
+eu_senb2 <- eu_senb1 %>% arrange(egrowth)
+eu_senb3 <- eu_senb2 %>% mutate(reporter = factor(as.character(reporter), levels = eu_senb2$reporter))
+
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_senb3) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export growth, %", x = "", title = "EU sanctioned export growth to Russia neighbours after war")
+```
+
+
+
+# Appendix {#sec-appendix}
+
+## Data
+
+The data used comes from Eurostat dataset on internation trade in [goods](https://ec.europa.eu/eurostat/databrowser/view/DS-045409/legacyMultiFreq/table?lang=en). 
+
+All the code and data resides in the [Github repository](https://github.com/vzemlys/ruimpeks/):
+
+1. [Code for this document](https://github.com/vzemlys/ruimpeks/eu_ru_export.qmd)  
+2. [Total trade data](https://github.com/vzemlys/ruimpeks/xlsx) 
+3. [CN codes for export sanctions](https://github.com/vzemlys/ruimpeks/raw/input_codes.csv)
+4. [Sanctioned export data](https://github.com/vzemlys/ruimpeks/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/R/prepare_data.R).
