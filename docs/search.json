@@ -165,7 +165,7 @@
     "href": "eu_ru_trade.html#data",
     "title": "EU export and import to Russia and its neighbours",
     "section": "Data",
-    "text": "Data\nThe data used comes from Eurostat dataset on internation trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document\n\nTotal trade data\nCN codes for export sanctions\nSanctioned export data and the code to prepare it.\nSanctioned exports CN 8 digits codes and the code to prepare it."
+    "text": "Data\nThe data used comes from Eurostat dataset on internation trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document\n\nTotal trade data\nCN codes for export sanctions\nSanctioned export data and the code to prepare it.\nSanctioned exports CN 8 digits codes."
   },
   {
     "objectID": "eu_ru_trade.html#trade-in-absolute-values",

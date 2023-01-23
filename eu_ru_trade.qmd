@@ -488,4 +488,4 @@ All the code and data resides in the [Github repository](https://github.com/vzem
 2. [Total trade data](https://github.com/vzemlys/ruimpeks/xlsx) 
 3. [CN codes for export sanctions](https://github.com/vzemlys/ruimpeks/raw/input_codes.csv)
 4. [Sanctioned export data](https://github.com/vzemlys/ruimpeks/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/R/prepare_data.R).
-5. [Sanctioned exports CN 8 digits codes](https://github.com/vzemlys/ruimpeks/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/meta/export_sanction_codes.csv).
+5. [Sanctioned exports CN 8 digits codes](https://github.com/vzemlys/ruimpeks/meta/export_sanction_codes.csv).
