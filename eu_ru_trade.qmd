@@ -9,6 +9,7 @@ format:
         df-print: paged
         toc: true
         toc-location: left
+        theme: journal
 knitr: 
   opts_chunk: 
     echo: false
@@ -27,7 +28,6 @@ The analysis of overall trade impact is presented followed by the analysis of sa
 Trade with Russia dropped significantly after Russia invasion on February 24th. However the export to Russia neighbours has increased meaning that companies are evading sanctions on exports to Russia by exporting to its neighbours instead.
 
 
-
 ```{r}
 library(readxl)
 library(dplyr)
@@ -36,6 +36,7 @@ library(lubridate)
 library(ggplot2)
 library(stringr)
 library(arrow)
+library(DT)
 
 source("R/read_eurostat.R")
 
@@ -60,11 +61,11 @@ eu_texp1 <- eu_texp %>%
 
 eu_tr <- eu_texp1 %>% filter(month <= "2022-10-01")
 ```
-# EU total trade with Russia and neighbouring countries 
+# EU overall trade with Russia and neighbouring countries 
 
 Energy trade is a big part of overall EU trade. It distorts overall picture so it was excluded from the analysis. The period taken is from January 2020 so that dynamics of two years before the war can be seen. The data is available up to October 2022.
 
-## Trade in absolute values
+## Overall trade 
 
 ### EU exports to Russia and neighbouring countries
 
@@ -123,7 +124,7 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(coun
 ```
 
 
-## Trade growth
+## Overall trade growth
 
 Comparison is made between the months following the Russian invasion and corresponding months in 2021. 
 ```{r}
@@ -221,7 +222,8 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb5) +
 
 # Effect of sanctions on export
 
-Sanctions put on exports are listed by their CN code in the following [document](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02014R0833-20221007). See @sec-appendix for technical details how the data was collected.
+Sanctions put on exports are listed by their CN code in the following [document](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02014R0833-20221007). See @sec-appendix for technical details how the data was collected. The sanctions mentioned both CN 4 digits and CN 8 digits code. Only CN 8 digit codes were used for analysis.
+
 
 There are quotas for certain sanctioned goods, which allow export, so it is expected that sanctioned export is non zero until the quotas run out. The effect of quotas is not analyzed.
 
@@ -332,7 +334,134 @@ ggplot(aes(x = reporter, y = egrowth, fill = epos), data = eu_senb3) +
   labs(y = "Export growth, %", x = "", title = "EU sanctioned export growth to Russia neighbours after war")
 ```
 
+```{r}
+scd <- espq %>%
+  count(code, product) %>%
+  select(-n) %>%
+  mutate(head = substring(code, 1, 4))
 
+espq1 <- espq %>%
+  mutate(
+    period =
+      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
+        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      )
+  ) %>%
+  inner_join(cn) %>%
+  inner_join(eu_cn) %>%
+  filter(!is.na(period)) %>%
+  group_by(partner = country, reporter = eu_country, period, code, product) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(partner, reporter, code, product, period) %>%
+  group_by(partner, reporter, code, product) %>%
+  mutate(egrowth = round(100 * (value / lag(value) - 1), 2)) %>%
+  ungroup()
+
+espq2 <- espq1 %>%
+  mutate(head = substring(code, 1, 4)) %>%
+  group_by(partner, reporter, period, head) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(partner, reporter, head, period) %>%
+  group_by(partner, reporter, head) %>%
+  mutate(egrowth = round(100 * (value / lag(value) - 1), 2))
+
+espq3 <- espq1 %>%
+  group_by(partner, period, code, product) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(partner, code, product, period) %>%
+  group_by(partner, code, product) %>%
+  mutate(egrowth = round(100 * (value / lag(value) - 1), 2)) %>%
+  ungroup()
+
+espq4 <- espq1 %>%
+  group_by(reporter, period, code, product) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(reporter, code, product, period) %>%
+  group_by(reporter, code, product) %>%
+  mutate(egrowth = round(100 * (value / lag(value) - 1), 2)) %>%
+  ungroup()
+
+espq5 <- espq1 %>%
+  group_by(reporter, period) %>%
+  summarise(value = sum(value)) %>%
+  ungroup() %>%
+  arrange(reporter, period) %>%
+  group_by(reporter) %>%
+  mutate(egrowth = round(100 * (value / lag(value) - 1), 2)) %>%
+  ungroup()
+```
+
+### EU sanctioned export 
+
+Absolute values Russian and its neighbours combined.
+
+```{r}
+es_set <- espq5 %>%
+  filter(period == 2022) %>%
+  arrange(value)
+es_set1 <- es_set %>% mutate(reporter = factor(reporter, levels = es_set$reporter))
+
+ggplot(aes(x = reporter, y = value), data = es_set1 %>% mutate(value = value / 1e6)) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  labs(y = "Export, millions €", x = "", title = "EU sanctioned export, after start of war")
+```
+
+
+```{r}
+es_seg <- espq5 %>%
+  filter(period == 2022) %>%
+  arrange(egrowth) %>%
+  mutate(epos = egrowth > 0)
+es_seg1 <- es_seg %>% mutate(reporter = factor(reporter, levels = es_seg$reporter))
+
+ggplot(aes(x = reporter, y = egrowth, fill = epos), data = es_seg1 %>% mutate(value = value / 1e6)) +
+  geom_col() +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = cols[c(4, 6)], guide = "none") +
+  labs(y = "Export, growth %", x = "", title = "EU sanctioned export growth, after start of war")
+```
+
+## Sanction anomalies
+
+Export to Russia sanction evasion should be visible by increased export to other countries. Define anomaly as the export which is more than 10 million euro in value and which doubled after a war.
+
+```{r}
+tb <- espq1 %>%
+  filter(period == 2022) %>%
+  filter(value > 10e6 & egrowth > 100) %>%
+  mutate(growth = egrowth / 100) %>%
+  arrange(-value) %>%
+  select(reporter, partner, code, product, value, growth)
+
+
+datatable(tb,
+  options =
+    list(
+      dom = "lpt",
+      pageLength = 10,
+      lengthMenu = c(10, 50, nrow(tb)),
+      columnDefs = list(list(
+        targets = "_all",
+        render = JS(
+          "function(data, type, row, meta) {",
+          "return type === 'display' && data != null && data.length > 30 ?",
+          "'<span title=\"' + data + '\">' + data.substr(0, 30) + '...</span>' : data;",
+          "}"
+        )
+      ))
+    ),
+  class = "display", rownames = FALSE
+) %>%
+  formatCurrency(c("value"), currency = "€") %>%
+  formatPercentage(c("growth"), 2)
+``` 
 
 # Appendix {#sec-appendix}
 
@@ -346,3 +475,4 @@ All the code and data resides in the [Github repository](https://github.com/vzem
 2. [Total trade data](https://github.com/vzemlys/ruimpeks/xlsx) 
 3. [CN codes for export sanctions](https://github.com/vzemlys/ruimpeks/raw/input_codes.csv)
 4. [Sanctioned export data](https://github.com/vzemlys/ruimpeks/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/R/prepare_data.R).
+5. [Sanctioned exports CN 8 digits codes](https://github.com/vzemlys/ruimpeks/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/meta/export_sanction_codes.csv).

@@ -165,7 +165,7 @@
     "href": "eu_ru_trade.html#data",
     "title": "EU export and import to Russia and its neighbours",
     "section": "Data",
-    "text": "Data\nThe data used comes from Eurostat dataset on internation trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document\n\nTotal trade data\nCN codes for export sanctions\nSanctioned export data and the code to prepare it."
+    "text": "Data\nThe data used comes from Eurostat dataset on internation trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document\n\nTotal trade data\nCN codes for export sanctions\nSanctioned export data and the code to prepare it.\nSanctioned exports CN 8 digits codes and the code to prepare it."
   },
   {
     "objectID": "eu_ru_trade.html#trade-in-absolute-values",
@@ -193,6 +193,27 @@
     "href": "eu_ru_trade.html#sanctioned-export-growth",
     "title": "EU export and import to Russia and its neighbours",
     "section": "Sanctioned export growth",
-    "text": "Sanctioned export growth\n\n\n\n\nEU sanctioned export growth to Russia\n\n\n\n\n\n\n\nEU sanctioned export growth to Russia neighbours"
+    "text": "Sanctioned export growth\n\n\n\n\nEU sanctioned export growth to Russia\n\n\n\n\n\n\n\nEU sanctioned export growth to Russia neighbours\n\n\n\n\n\n\n\n\n\n\nEU sanctioned export\nAbsolute values Russian and its neighbours combined."
+  },
+  {
+    "objectID": "eu_ru_trade.html#overall-trade",
+    "href": "eu_ru_trade.html#overall-trade",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Overall trade",
+    "text": "Overall trade\n\nEU exports to Russia and neighbouring countries\n\n\n\n\n\n\n\nEU export to Russia neighbours\n\n\n\n\n\n\n\nEU import from Russia and neighbouring countries\n\n\n\n\n\n\n\nEU import from Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#overall-trade-growth",
+    "href": "eu_ru_trade.html#overall-trade-growth",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Overall trade growth",
+    "text": "Overall trade growth\nComparison is made between the months following the Russian invasion and corresponding months in 2021.\n\n\n\n\nEU export growth to Russia\n\n\n\n\n\n\n\nEU export growth to Russia neighbours\n\n\n\n\n\n\n\nEU import growth from Russia\n\n\n\n\n\n\n\nEU import growth from Russia neighbours"
+  },
+  {
+    "objectID": "eu_ru_trade.html#sanction-anomalies",
+    "href": "eu_ru_trade.html#sanction-anomalies",
+    "title": "EU export and import to Russia and its neighbours",
+    "section": "Sanction anomalies",
+    "text": "Sanction anomalies\nExport to Russia sanction evasion should be visible by increased export to other countries. Define anomaly as the export which is more than 10 million euro in value and which doubled after a war."
   }
 ]
