@@ -16,15 +16,6 @@ knitr:
     warning: false
 ---
 
-# Introduction
-
-Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.
-
-The analysis of overall trade impact is presented followed by the analysis of sanctioned export. The data used comes from Eurostat. See the @appendix for technical details.
-
-## Main findings
-
-Trade with Russia dropped significantly after Russia invasion on February 24th. However the export to Russia neighbours has increased meaning that companies are evading sanctions on exports to Russia by exporting to its neighbours instead.
 
 
 ```{r}
@@ -58,11 +49,55 @@ eu_texp1 <- eu_texp %>%
   left_join(cn) %>%
   inner_join(eu_cn)
 
-eu_tr <- eu_texp1 %>% filter(month <= "2022-10-01")
+
+totals <- eu_texp1 %>%
+  group_by(month) %>%
+  summarise(across(.cols = c("energy_import", "energy_export", "total_import", "total_export", "export", "import"), sum)) %>%
+  ungroup() %>%
+  mutate(pi = round(100 * energy_import / total_import, 2), pe = round(100 * energy_export / total_export, 2))
+
+cmp22 <- c(ymd("2022-03-01"), ymd("2022-11-01"))
+cmp21 <- cmp22 - years(1)
+
+
+eu_tr <- eu_texp1 %>% filter(month <= cmp22[2])
+
+eu_trf <- eu_tr %>%
+  mutate(
+    period =
+      ifelse(month >= cmp21[1] & month <= cmp21[2], 2021,
+        ifelse(month >= cmp22[1] & month <= cmp22[2], 2022, NA)
+      )
+  ) %>%
+  filter(!is.na(period)) %>%
+  group_by(partner = country, reporter = eu_country, period) %>%
+  summarise(export = sum(export), import = sum(import))
+
+eu_totals <- eu_trf %>%
+  mutate(russia = partner == "Russia") %>%
+  group_by(russia, period) %>%
+  summarise(export = sum(export), import = sum(import)) %>%
+  ungroup() %>%
+  arrange(russia, period) %>%
+  group_by(russia) %>%
+  mutate(egrowth = round(100 * (export / lag(export) - 1), 2), igrowth = round(100 * (import / lag(import) - 1), 2))
 ```
+# Introduction
+
+Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to analyze these changes.
+
+The analysis of overall trade impact is presented followed by the analysis of sanctioned export. The data used comes from Eurostat. See the @appendix for technical details.
+
+## Main findings
+
+Trade with Russia dropped significantly after Russia invasion on February 24th. However the export to Russia neighbours has increased meaning that companies are evading sanctions on exports to Russia by exporting to its neighbours instead.
+
+
 # EU overall trade with Russia and neighbouring countries 
 
 Energy trade is a big part of overall EU trade. It distorts overall picture so it was excluded from the analysis. The period taken is from January 2020 so that dynamics of two years before the war can be seen. The data is available up to October 2022.
+
+In after war period EU countries exports to Russia fell by 48% to 31 billion euro compared to similar period in 2022. However EU countries export to Russia neighbours rose by 43% 16.7 billion euro. 
 
 ## Overall trade 
 
@@ -127,16 +162,6 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(coun
 
 Comparison is made between the months following the Russian invasion and corresponding months in 2021. 
 ```{r}
-eu_trf <- eu_tr %>%
-  mutate(
-    period =
-      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
-        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
-      )
-  ) %>%
-  filter(!is.na(period)) %>%
-  group_by(partner = country, reporter = eu_country, period) %>%
-  summarise(export = sum(export), import = sum(import))
 
 eu_erf <- eu_trf %>%
   filter(partner == "Russia") %>%
@@ -223,8 +248,7 @@ ggplot(aes(x = reporter, y = igrowth, fill = ipos), data = eu_enb5) +
 
 Sanctions put on exports are listed by their CN code in the following [document](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A02014R0833-20221007). See @sec-appendix for technical details how the data was collected. The sanctions mentioned both CN 4 digits and CN 8 digits code. Only CN 8 digit codes were used for analysis.
 
-
-There are quotas for certain sanctioned goods, which allow export, so it is expected that sanctioned export is non zero until the quotas run out. The effect of quotas is not analyzed.
+There are quotas and exceptions for certain sanctioned goods, which allow export, so it is expected that sanctioned export is non zero. The effect of quotas and exceptions is not taken to account.
 
 ## Export of sanctioned goods 
 
@@ -273,8 +297,8 @@ ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2 %>% fil
 eu_strf <- es1 %>%
   mutate(
     period =
-      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
-        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      ifelse(month >= cmp21[1] & month <= cmp21[2], 2021,
+        ifelse(month >= cmp22[1] & month <= cmp22[2], 2022, NA)
       )
   ) %>%
   filter(!is.na(period)) %>%
@@ -342,8 +366,8 @@ scd <- espq %>%
 espq1 <- espq %>%
   mutate(
     period =
-      ifelse(month >= "2021-03-01" & month <= "2021-10-01", 2021,
-        ifelse(month >= "2022-03-01" & month <= "2022-10-01", 2022, NA)
+      ifelse(month >= cmp21[1] & month <= cmp21[2], 2021,
+        ifelse(month >= cmp22[1] & month <= cmp22[2], 2022, NA)
       )
   ) %>%
   inner_join(cn) %>%
