@@ -1,5 +1,5 @@
 ---
-title: "EU export and import to Russia and its neighbours"
+title: "On EU trade with Russia and its neighbours after Russian invasion of Ukraine"
 execute:
   echo: false
 format: 
@@ -88,11 +88,11 @@ nb_data <- eu_totals %>% filter(period == 2022, !russia)
 ```
 # Introduction
 
-Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to give a bird's eye view of these changes. The data from Eurostat was used. 
+Russia war on Ukraine had an impact to EU and Russia trade. The goal of this document is to give a bird's eye view of these changes using the EU trade data from Eurostat. 
 
 ## Main findings
 
-1. Export to Russia dropped by `r round(abs(ru_data$egrowth[1]))`% after Russia invasion to Ukraine on February 24th.  Export to Russia neighbours increased by  `r round(nb_data$egrowth[1])`%.
+1. Export to Russia dropped by `r round(abs(ru_data$egrowth[1]))`% after Russia invasion of Ukraine on February 24th, 2022.  Export to Russia neighbours increased by  `r round(nb_data$egrowth[1])`%.
 3. Sanctioned goods export to Russia fell by 71%. Sanctioned good export to Russia neighbours increased by 95%.
 4. More that 100 sanctioned export markets has increased by 100% after the war and constitute 21% of total sanctioned exports. This strongly suggests that EU countries are evading sanctions by exporting to Russia neighbours instead.
 
@@ -481,6 +481,12 @@ tb <- espq1 %>%
   mutate(growth = egrowth / 100) %>%
   arrange(-value) %>%
   select(reporter, partner, code, product, value, growth)
+
+tb1 <- espq1 %>%
+  filter(period == 2022) %>%
+  mutate(growth = egrowth / 100) %>%
+  arrange(-value) %>%
+  select(reporter, partner, code, product, value, growth)
 ```
 
 ## Sanction anomalies
@@ -529,6 +535,8 @@ datatable(tb,
 
 The growth with empty values in the table means that the export in year 2021 from March to November was zero. The full name of exported goods appears if you hover on truncated name.
 
+The full table with all the markets, their after war export value and growth from the same period in year 2021 can be found [here](https://github.com/vzemlys/ruimpeks/tree/main/xlsx/eu_sanctioned_export_growth.xlsx). Note the file size is 11MB.
+
 # Appendix {#sec-appendix}
 
 ## Data
@@ -542,3 +550,7 @@ All the code and data resides in the [Github repository](https://github.com/vzem
 3. [CN codes for export sanctions](https://github.com/vzemlys/ruimpeks/blob/main/raw/input_codes.csv).
 4. [Sanctioned export data](https://github.com/vzemlys/ruimpeks/tree/main/raw) and the [code to prepare it](https://github.com/vzemlys/ruimpeks/blob/main/R/prepare_data.R).
 5. [Sanctioned exports CN 8 digits codes](https://github.com/vzemlys/ruimpeks/blob/main/meta/export_sanctions_codes.csv).
+
+## Citation
+
+To cite this document use the following: V. Zemlys-Balevičius, "On EU trade with Russia and its neighbours after Russian invasion of Ukraine", vzemlys.github.io/ruimpeks, 25 January, 2022, https://vzemlys.github.io/ruimpeks/eu_ru_trade.html

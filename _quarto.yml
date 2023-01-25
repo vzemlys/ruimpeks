@@ -5,3 +5,7 @@ project:
 format: 
   html: 
     theme: cosmo
+    
+website: 
+  twitter-card: true
+  google-analytics: "G-NMVPHZD34P"

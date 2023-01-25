@@ -163,7 +163,7 @@
   {
     "objectID": "eu_ru_trade.html#data",
     "href": "eu_ru_trade.html#data",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Data",
     "text": "Data\nThe data used comes from Eurostat dataset on international trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document.\n\nTotal trade data.\nCN codes for export sanctions.\nSanctioned export data and the code to prepare it.\nSanctioned exports CN 8 digits codes."
   },
@@ -184,43 +184,50 @@
   {
     "objectID": "eu_ru_trade.html#export-of-sanctioned-goods",
     "href": "eu_ru_trade.html#export-of-sanctioned-goods",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Export of sanctioned goods",
     "text": "Export of sanctioned goods\n\nTo Russia with its neighbours\n\n\n\n\n\n\n\n\n\n\nTo Russia neighbours"
   },
   {
     "objectID": "eu_ru_trade.html#sanctioned-export-growth",
     "href": "eu_ru_trade.html#sanctioned-export-growth",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Sanctioned export growth",
     "text": "Sanctioned export growth\n\n\n\n\nEU sanctioned export growth to Russia\n\n\n\n\n\n\n\nEU sanctioned export growth to Russia neighbours\nMalta sanctioned export grew by 4156% so it is not shown on the graph.\n\n\n\n\n\n\n\n\n\n\nEU sanctioned export\nAbsolute values Russian and its neighbours combined."
   },
   {
     "objectID": "eu_ru_trade.html#overall-trade",
     "href": "eu_ru_trade.html#overall-trade",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Overall trade",
     "text": "Overall trade\n\nEU exports to Russia and neighbouring countries\n\n\n\n\n\n\n\nEU export to Russia neighbours\n\n\n\n\n\n\n\nEU import from Russia and neighbouring countries\n\n\n\n\n\n\n\nEU import from Russia neighbours"
   },
   {
     "objectID": "eu_ru_trade.html#overall-trade-growth",
     "href": "eu_ru_trade.html#overall-trade-growth",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Overall trade growth",
     "text": "Overall trade growth\nComparison is made between the months following the Russian invasion and corresponding months in 2021.\n\n\n\n\nEU export growth to Russia\n\n\n\n\n\n\n\nEU export growth to Russia neighbours\n\n\n\n\n\n\n\nEU import growth from Russia\n\n\n\n\n\n\n\nEU import growth from Russia neighbours"
   },
   {
     "objectID": "eu_ru_trade.html#sanction-anomalies",
     "href": "eu_ru_trade.html#sanction-anomalies",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Sanction anomalies",
-    "text": "Sanction anomalies\nExport to Russia sanction evasion should be visible by increased export to other countries. Define anomaly as the export which is more than 10 million euro in value and which doubled after a war.\n\nAnomalous markets\nDefine by market an EU country, its export destination and good defined by 8 digit CN classifier.\nUsing the anomaly definition 118 export categories stand out. It is interesting that there are 25` categories of sanctioned exports to Russia which experienced triple digit growth.\nThe biggest of anomalous exports in term of value are motor cars. Lithuania topping the list with 173 millions euro export to Belarus which tripled compared to previous year. Germany exports of motor cars to Belarus and Russia grew ~8 times for cars with cylinder capacity between 1.5 and 2 litres. Germany exports of motor cars to Belarus with cylinder capacity larger than 2 litres grew 26 times. These Germany exports amounted to 422 milion euro of exports after the war.\nPoland exported 139 millions of euro worth turbojets to Kazakhstan, and these exports grew 3 times. Czechia exported 233 millions euro of smartphones to Kazakhstan, Armenia and Georgia after the war, which is notable as in 2021 there were no such exports at the same period.\nLatvia exported 43 millions euro worth of sparling wine to Russia and these exports grew 4 times.\nGreece exported 75 millions euro worth of jet fuel to Georgia. These exports grew by ~4500 times compared to similar period in 2021.\n\n\n\n\n\n\n\nThe growth with empty values in the table means that the export in year 2021 from March to November was zero. The full name of exported goods appears if you hover on truncated name."
+    "text": "Sanction anomalies\nExport to Russia sanction evasion should be visible by increased export to other countries. Define anomaly as the export which is more than 10 million euro in value and which doubled after a war.\n\nAnomalous markets\nDefine by market an EU country, its export destination and good defined by 8 digit CN classifier.\nUsing the anomaly definition 118 export categories stand out. It is interesting that there are 25` categories of sanctioned exports to Russia which experienced triple digit growth.\nThe biggest of anomalous exports in term of value are motor cars. Lithuania topping the list with 173 millions euro export to Belarus which tripled compared to previous year. Germany exports of motor cars to Belarus and Russia grew ~8 times for cars with cylinder capacity between 1.5 and 2 litres. Germany exports of motor cars to Belarus with cylinder capacity larger than 2 litres grew 26 times. These Germany exports amounted to 422 milion euro of exports after the war.\nPoland exported 139 millions of euro worth turbojets to Kazakhstan, and these exports grew 3 times. Czechia exported 233 millions euro of smartphones to Kazakhstan, Armenia and Georgia after the war, which is notable as in 2021 there were no such exports at the same period.\nLatvia exported 43 millions euro worth of sparling wine to Russia and these exports grew 4 times.\nGreece exported 75 millions euro worth of jet fuel to Georgia. These exports grew by ~4500 times compared to similar period in 2021.\n\n\n\n\n\n\n\nThe growth with empty values in the table means that the export in year 2021 from March to November was zero. The full name of exported goods appears if you hover on truncated name.\nThe full table with all the markets, their after war export value and growth from the same period in year 2021 can be found here. Note the file size is 11MB."
   },
   {
     "objectID": "eu_ru_trade.html#main-findings",
     "href": "eu_ru_trade.html#main-findings",
-    "title": "EU export and import to Russia and its neighbours",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Main findings",
-    "text": "Main findings\n\nExport to Russia dropped by 47% after Russia invasion to Ukraine on February 24th. Export to Russia neighbours increased by 48%.\nSanctioned goods export to Russia fell by 71%. Sanctioned good export to Russia neighbours increased by 95%.\nMore that 100 sanctioned export markets has increased by 100% after the war and constitute 21% of total sanctioned exports. This strongly suggests that EU countries are evading sanctions by exporting to Russia neighbours instead."
+    "text": "Main findings\n\nExport to Russia dropped by 47% after Russia invasion of Ukraine on February 24th, 2022. Export to Russia neighbours increased by 48%.\nSanctioned goods export to Russia fell by 71%. Sanctioned good export to Russia neighbours increased by 95%.\nMore that 100 sanctioned export markets has increased by 100% after the war and constitute 21% of total sanctioned exports. This strongly suggests that EU countries are evading sanctions by exporting to Russia neighbours instead."
+  },
+  {
+    "objectID": "eu_ru_trade.html#citation",
+    "href": "eu_ru_trade.html#citation",
+    "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
+    "section": "Citation",
+    "text": "Citation\nTo cite this document use the following: V. Zemlys-Balevičius, “On EU trade with Russia and its neighbours after Russian invasion of Ukraine”, vzemlys.github.io/ruimpeks, 25 January, 2022, https://vzemlys.github.io/ruimpeks/eu_ru_trade.html"
   }
 ]
