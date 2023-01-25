@@ -448,16 +448,22 @@ total_se <- espq1 %>%
 Absolute values Russian and its neighbours combined.
 
 ```{r}
-es_set <- espq5 %>%
+es_tset <- espq5 %>%
   filter(period == 2022) %>%
   arrange(value)
-es_set1 <- es_set %>% mutate(reporter = factor(reporter, levels = es_set$reporter))
 
-ggplot(aes(x = reporter, y = value), data = es_set1 %>% mutate(value = value / 1e6)) +
+es_set <- espq2 %>%
+  filter(period == 2022) %>%
+  arrange(value)
+
+es_set1 <- es_set %>% mutate(reporter = factor(reporter, levels = es_tset$reporter), partner = factor(partner, levels = clevs))
+
+ggplot(aes(x = reporter, y = value, fill = partner), data = es_set1 %>% mutate(value = value / 1e6)) +
   geom_col() +
   coord_flip() +
+  scale_fill_manual(name = "Country", values = cols) +
   theme_bw() +
-  labs(y = "Export, millions €", x = "", title = "EU sanctioned export, after start of war")
+  labs(y = "Export, millions €", x = "", title = "EU sanctioned export, after the start of the war")
 ```
 
 
@@ -473,7 +479,7 @@ ggplot(aes(x = reporter, y = egrowth, fill = epos), data = es_seg1 %>% mutate(va
   coord_flip() +
   theme_bw() +
   scale_fill_manual(values = cols_true[c(2, 1)], guide = "none") +
-  labs(y = "Export, growth %", x = "", title = "EU sanctioned export growth, after start of war")
+  labs(y = "Export, growth %", x = "", title = "EU sanctioned export growth, after the start of the war")
 
 tb <- espq1 %>%
   filter(period == 2022) %>%
