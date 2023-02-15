@@ -229,5 +229,47 @@
     "title": "On EU trade with Russia and its neighbours after Russian invasion of Ukraine",
     "section": "Citation",
     "text": "Citation\nTo cite this document use the following: V. Zemlys-Balevičius, “On EU trade with Russia and its neighbours after Russian invasion of Ukraine”, vzemlys.github.io/ruimpeks, 25 January, 2022, https://vzemlys.github.io/ruimpeks/eu_ru_trade.html"
+  },
+  {
+    "objectID": "lt_trade.html#overall-trade",
+    "href": "lt_trade.html#overall-trade",
+    "title": "Lithuania trade with Russia",
+    "section": "Overall trade",
+    "text": "Overall trade\n\nLithuania exports to Russia and neighbouring countries\n\n\n\n\n\n\n\nLithuania export to Russia neighbours\n\n\n\n\n\n\n\nLithuania import from Russia and neighbouring countries\n\n\n\n\n\n\n\nLithiania import from Russia neighbours"
+  },
+  {
+    "objectID": "lt_trade.html#export-of-sanctioned-goods",
+    "href": "lt_trade.html#export-of-sanctioned-goods",
+    "title": "Lithuania trade with Russia",
+    "section": "Export of sanctioned goods",
+    "text": "Export of sanctioned goods\n\nTo Russia with its neighbours\n\n\n\n\n\n\n\n\n\n\nTo Russia neighbours"
+  },
+  {
+    "objectID": "lt_trade.html#sanction-anomalies",
+    "href": "lt_trade.html#sanction-anomalies",
+    "title": "Lithuania trade with Russia",
+    "section": "Sanction anomalies",
+    "text": "Sanction anomalies\n\nAnomalous markets\nDefine by market an EU country, its export destination and good defined by 8 digit CN classifier.\nUsing the anomaly definition 160 export categories stand out. It is interesting that there are 21` categories of sanctioned exports to Russia which experienced triple digit growth.\n\n\n\n\n\n\n\nThe growth with empty values in the table means that the export in year 2021 from March to November was zero. The full name of exported goods appears if you hover on truncated name.\nThe full table with all the markets, their after the start of the war export value and growth from the same period in year 2021 can be found here. Note the file size is 11MB."
+  },
+  {
+    "objectID": "lt_trade.html#data",
+    "href": "lt_trade.html#data",
+    "title": "Lithuania trade with Russia",
+    "section": "Data",
+    "text": "Data\nThe data used comes from Eurostat dataset on international trade in goods.\nAll the code and data resides in the Github repository:\n\nCode for this document.\n\nTotal trade data.\nCN codes for export sanctions.\nSanctioned export data and the code to prepare it.\nSanctioned exports CN 8 digits codes."
+  },
+  {
+    "objectID": "lt_trade.html#citation",
+    "href": "lt_trade.html#citation",
+    "title": "Lithuania trade with Russia",
+    "section": "Citation",
+    "text": "Citation\nTo cite this document use the following: V. Zemlys-Balevičius, “On EU trade with Russia and its neighbours after Russian invasion of Ukraine”, vzemlys.github.io/ruimpeks, 25 January, 2022, https://vzemlys.github.io/ruimpeks/eu_ru_trade.html"
+  },
+  {
+    "objectID": "LICENCE.html",
+    "href": "LICENCE.html",
+    "title": "",
+    "section": "",
+    "text": "MIT License\nCopyright (c) 2023 Vaidotas Zemlys-Balevičius\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
   }
 ]
