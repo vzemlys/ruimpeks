@@ -75,7 +75,6 @@ ggplot(aes(x = month, y = yoy), data = bvol1 %>% filter(country == eu, month >= 
 ### Absolute values
 
 ```{r}
-
 ggplot(aes(x = month, y = quantity), data = bvol1 %>% filter(country == eu)) +
   theme_bw() +
   geom_col() +

@@ -147,7 +147,6 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(coun
 ### EU import from Russia and neighbouring countries
 
 ```{r}
-
 ggplot(aes(x = month, y = import, fill = country), data = eu_tr1) +
   geom_col() +
   theme_bw() +
@@ -172,7 +171,6 @@ ggplot(aes(x = month, y = import, fill = country), data = eu_tr1 %>% filter(coun
 
 Comparison is made between the months following the Russian invasion and corresponding months in 2021. 
 ```{r}
-
 eu_erf <- eu_trf %>%
   filter(partner == "Russia") %>%
   arrange(reporter, period) %>%
@@ -284,7 +282,6 @@ es2 <- es1 %>%
 
 
 ```{r}
-
 ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
   geom_col() +
   theme_bw() +
@@ -515,8 +512,6 @@ Greece exported 75 millions euro worth of jet fuel to Georgia. These exports gre
 
 
 ```{r}
-
-
 datatable(tb,
   options =
     list(

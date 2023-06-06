@@ -150,7 +150,6 @@ ggplot(aes(x = month, y = export, fill = country), data = eu_tr1 %>% filter(coun
 ### Lithuania import from Russia and neighbouring countries
 
 ```{r}
-
 ggplot(aes(x = month, y = import, fill = country), data = eu_tr1) +
   geom_col() +
   theme_bw() +
@@ -201,7 +200,6 @@ es2 <- es1 %>%
 
 
 ```{r}
-
 ggplot(aes(x = month, y = sanctioned_export, fill = country), data = es2) +
   geom_col() +
   theme_bw() +
@@ -293,7 +291,6 @@ total_se <- espq1 %>%
 
 
 ```{r}
-
 tb <- espq1 %>%
   filter(period == 2022) %>%
   filter(value > 1e6 & egrowth > 100) %>%
@@ -318,8 +315,6 @@ Define by market an EU country, its export destination and good defined by 8 dig
 Using the anomaly definition `r nrow(tb)`  export categories stand out. It is interesting that there are `r nrow(tb %>% filter(partner == "Russia"))`` categories of sanctioned exports to Russia which experienced triple digit growth. 
 
 ```{r}
-
-
 datatable(tb,
   options =
     list(
